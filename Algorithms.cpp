@@ -138,11 +138,11 @@ namespace ariel{
         int source, destination, weight;
     };
 
-    vector<int> bellmanFord(const unsigned int V,  unsigned int source, vector<Edge>& negativeCycle, const vector<Edge>& edges) {
+    vector<int> bellmanFord(const unsigned int V,  unsigned int source, vector<Edge>& negativeCycle, const vector<Edge>& edges, vector<int>& parents) {
         vector<int> distance(V, numeric_limits<int>::max());
         distance[source] = 0;
 
-        vector<int> parent(V, -1);
+        parents.resize(V, -1);
 
         for (int i = 0; i < V - 1; ++i) {
             for (const auto& edge : edges) {
@@ -151,7 +151,7 @@ namespace ariel{
                 int weight = edge.weight;
                 if (distance[(unsigned int)u] != numeric_limits<int>::max() && distance[(unsigned int)u] + weight < distance[(unsigned int)v]) {
                     distance[(unsigned int)v] = distance[(unsigned int)u] + weight;
-                    parent[(unsigned int)v] = u;
+                    parents[(unsigned int)v] = u;
                 }
             }
         }
@@ -165,8 +165,8 @@ namespace ariel{
                 // Negative cycle detected
                 int current = v;
                 do {
-                    negativeCycle.push_back({parent[(unsigned int)current], current, distance[(unsigned int)current]});
-                    current = parent[(unsigned int)current];
+                    negativeCycle.push_back({parents[(unsigned int)current], current, distance[(unsigned int)current]});
+                    current = parents[(unsigned int)current];
                 } while (current != v);
                 return distance;
             }
@@ -178,7 +178,7 @@ namespace ariel{
     int shortestPath(const Graph& g2, const int start, const int end){
         int V = g2.mat.size();
         vector<Edge> negativeCycle;
-
+        vector <int> parents;
         vector<Edge> edges;
         for (size_t h =0; h<V; h++){//filling up edges vector with all matrix enteries != 0
             for (size_t r =0; r<V;r++){
@@ -186,17 +186,30 @@ namespace ariel{
             }
         }
 
-        vector<int> distances = bellmanFord((unsigned int)V, (unsigned int)start, negativeCycle, edges);
+        vector<int> distances = bellmanFord((unsigned int)V, (unsigned int)start, negativeCycle, edges, parents);
         if(distances[(unsigned int)end]==numeric_limits<int>::max()) return -1;//is ==operator working???
         if (!negativeCycle.empty()) {
           return -1;
         } 
         else {
         int dis = distances[(unsigned int)end];
-        cout << "Shortest path weight: " << distances[(unsigned int)end]; //<< ". PATH: "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        cout << "Shortest path weight: " << distances[(unsigned int)end] << ". Path: ";
+        // Reconstruct path from end to start
+        vector<int> path;
+        int current = end;
+        while (current != start) {
+            path.push_back(current);
+            current = parents[(unsigned int)current];
+        }
+        path.push_back(start);
+        // Print path in reverse order
+        for (int i = path.size() - 1; i > 0; --i) {
+            cout << path[(unsigned int)i] << "->";
+        }
+        cout << path[0]<<endl;
         }
 
-        return -1;/////////////just for return
+        return 1;/////////////just for return
     }//returns the SP or vertices or -1.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     int Algorithms::negativeCycle(const Graph& g5){//in helper function have an array or vector to return the actual cycle
@@ -208,10 +221,10 @@ namespace ariel{
                 if(g5.mat[h][r]!=0) edges.push_back({(int)h, (int)r,g5.mat[h][r]});
             }
         }
-
+        vector <int> parents;
         for(unsigned int l=0; l<V; l++){
             for(unsigned int k=0; k<V; k++){//unsigned..
-                bellmanFord((unsigned int)V, l, negativeCycle, edges);
+                bellmanFord((unsigned int)V, l, negativeCycle, edges, parents);
                 if (!negativeCycle.empty()) {
                     for (const auto& edge : negativeCycle) {
                         cout << edge.source << " -> " << edge.destination;

@@ -5,7 +5,7 @@
 using namespace std;//there was no error but i added
 namespace ariel{
     Graph::Graph(): mat(), isDirected(){}
-
+    
     bool directed;
     //isSymetric = is directed 
     bool isSymetric(const vector<vector<int>>& ee) {
