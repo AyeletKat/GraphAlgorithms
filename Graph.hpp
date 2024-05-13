@@ -2,11 +2,10 @@
 # define Graph_HPP
 
 # include <vector>
-
+#include "Algorithms.hpp"
 using namespace std;
 
 namespace ariel {
-
     class Graph{
         //(private)
 
@@ -20,7 +19,6 @@ namespace ariel {
         void loadGraph(const vector<vector<int>>& gra3);//{//outline//mat = gra3;}
         void printGraph();
 
-        int countEdges(const vector<vector<int>>& graph, bool directed);
         void setDirected(bool b){
             isDirected = b;
         }

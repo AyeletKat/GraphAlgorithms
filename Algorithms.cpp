@@ -68,7 +68,7 @@ namespace ariel{
         return true; // Graph is strongly connected
     }
 
-    int ariel::Algorithms::isConnected(const Graph& g1){
+    int Algorithms::isConnected(const Graph& g1){
         bool dir = g1.isDirected;
         bool isCon = (dir) ? isStronglyConnected : isConnectedUndirected;
         if (isCon == 1) return 1;
@@ -175,7 +175,7 @@ namespace ariel{
         return distance;
     }
 /////////////////////
-    int shortestPath(const Graph& g2, const int start, const int end){
+    int Algorithms::shortestPath(const Graph& g2, const int start, const int end){
         int V = g2.mat.size();
         vector<Edge> negativeCycle;
         vector <int> parents;
@@ -265,7 +265,7 @@ namespace ariel{
         return false;
     }
 
-    int isContainsCycle(const Graph& g3){//prints cycle or 0
+    int Algorithms::isContainsCycle(const Graph& g3){//prints cycle or 0
         unsigned int V = g3.mat.size();
         vector <int> cycle;
         vector<bool> visited(V, false);

@@ -1,6 +1,6 @@
 #!make -f
 
-CXX=gcc#clang++#++-14
+CXX=gcc
 CXXFLAGS=-std=c++11 -Werror -Wsign-conversion
 VALGRIND_FLAGS=-v --leak-check=full --show-leak-kinds=all  --error-exitcode=99
 
@@ -10,7 +10,7 @@ OBJECTS=$(subst .cpp,.o,$(SOURCES))
 run: demo
 	./$^
 
-demo: Demo.o $(OBJECTS)
+demo: Demo.o $(filter-out TestCounter.o Test.o, $(OBJECTS))
 	$(CXX) $(CXXFLAGS) $^ -o demo
 
 test: TestCounter.o Test.o $(OBJECTS)
@@ -23,7 +23,7 @@ valgrind: demo test
 	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./demo 2>&1 | { egrep "lost| at " || true; }
 	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./test 2>&1 | { egrep "lost| at " || true; }
 
-%.o: %.cpp %.hpp
+%.o: %.cpp #%.hpp
 	$(CXX) $(CXXFLAGS) --compile $< -o $@
 
 clean:
