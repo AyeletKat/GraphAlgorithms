@@ -1,3 +1,7 @@
+/*
+Email adress: ayeletk03@gmail.com
+ID: 325408409
+*/
 #ifndef Algorithms_HPP
 #define Algorithms_HPP
 #include <string>
