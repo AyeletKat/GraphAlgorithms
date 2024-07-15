@@ -4,7 +4,7 @@ ID: 325408409
 */
 
 #include "Algorithms.hpp"
-#include <unordered_set>//??
+#include <unordered_set>
 #include <iostream>
 #include <stack>
 #include <queue>
@@ -13,7 +13,7 @@ ID: 325408409
 #include <unordered_map>
 namespace ariel{
     
-        ////////////////////////////////////////////////////////////////////////////////////:is connected:
+    ////////////////////////////////////////////////////////////////////////////////////:is connected:
     void dfs(const vector<vector<int>>& graph, int vertex, vector<bool>& visited, stack<int>& stack) {
         visited[(unsigned int) vertex] = true;
         for (size_t i = 0; i < graph[(unsigned int) vertex].size(); ++i) {
@@ -76,6 +76,12 @@ namespace ariel{
         return true; // Graph is strongly connected
     }
 
+    /** "isConnected" function checks if a graph is connected.
+     * For undirected graphs, the function uses Depth-First Search (DFS) to check if all vertices are reachable from a starting vertex.
+     * If all vertices are visited, the graph is connected.
+     - For directed graphs, Kosaraju-Sharir's algorithm is used to check for strong connectivity.
+     This involves performing DFS on the original graph, transposing the graph, and performing DFS on the transposed graph.
+     */
     int Algorithms::isConnected(const Graph& g1){
         bool dir = g1.isDirected;
         bool isCon = (dir) ? isStronglyConnected : isConnectedUndirected;
@@ -106,7 +112,12 @@ namespace ariel{
         }
         return true;
     }
-
+    /** "isBipartite" function checks if a graph is bipartite.
+     * Breadth-First Search (BFS) is used to check if the graph is bipartite. 
+     * The graph is colored with two colors, and the neighbors of each vertex are assigned the opposite color. 
+     * If a vertex is found to have the same color as one of its neighbors, the graph is not bipartite. 
+     * If the graph is bipartite, the function returns the two groups of vertices
+     */
     string Algorithms::isBipartite(const Graph& g4) {
     unsigned int n = g4.mat.size();
     vector<int> colors(n, -1); // -1 indicates that the node is not yet colored
@@ -201,7 +212,10 @@ namespace ariel{
 
         return distance;
     }
-/////////////////////
+    /** "shortestPath" function finds the shortest path between two vertices in a graph.
+     *  The Bellman-Ford algorithm is used to find the shortest path from a starting vertex to an ending vertex.
+     *  This algorithm also detects negative weight cycles. If a negative cycle is detected, the function returns `-1`.
+     */
     string Algorithms::shortestPath(const Graph& g2, const int start, const int end){
         int V = g2.mat.size();
         vector<Edge> negativeCycle;
@@ -243,7 +257,13 @@ namespace ariel{
 
         return result;/////////////just for return
     }//returns the SP or vertices or -1.
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
+    /**
+     * "negativeCycle" function finds a negative cycle in a graph.
+      The Bellman-Ford algorithm is used to detect negative weight cycles in the graph. 
+      The function iterates over all vertices as starting points and uses Bellman-Ford to check for negative cycles. 
+      If a negative cycle is found, it is printed, and the function returns 1. If no negative cycle is detected, the function returns -1
+     */
     int Algorithms::negativeCycle(const Graph& g5){//in helper function have an array or vector to return the actual cycle
         int V = g5.mat.size();
         vector<Edge> negativeCycle;
@@ -273,6 +293,12 @@ namespace ariel{
 string isContainsCycleDFS(const Graph& g, size_t src, vector<int>& colors, vector<int>& parents, vector<int>& path);
 string constructCyclePath(const vector<int>& path, int start);
 
+/** "isContainsCycle" function checks if a graph contains a cycle.
+ * A modified DFS is used to detect cycles in the graph. The graph is traversed, and the vertices 
+ * are colored to indicate their state (unvisited, visited, and completely processed).
+ *  If a back edge (an edge to a previously visited vertex that is not the parent) is found, 
+ * a cycle is detected and the cycle path is returned
+ */
 string Algorithms::isContainsCycle(const Graph& g) {
     vector<int> colors(g.mat.size(), 0);
     vector<int> parents(g.mat.size(), -1);
